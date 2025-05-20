@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - include:
+      file: db/changes/01-create-users-table.yaml
+  - include:
+      file: db/changes/02-create-roles-table.yaml
+  - include:
+      file: db/changes/03-create-user-roles-table.yaml
+  - include:
+      file: db/changes/04-create-accommodations-table.yaml
+  - include:
+      file: db/changes/05-create-accommodation-amenities-table.yaml
+  - include:
+      file: db/changes/06-create-bookings-table.yaml
+  - include:
+      file: db/changes/07-create-payments-table.yaml
