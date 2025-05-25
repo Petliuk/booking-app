@@ -1,4 +1,4 @@
-package com.example.bookingapp.dto;
+package com.example.bookingapp.dto.user;
 
 import com.example.bookingapp.annotation.FieldMatch;
 import jakarta.validation.constraints.Email;

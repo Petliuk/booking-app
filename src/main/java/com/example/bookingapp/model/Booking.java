@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,22 +28,27 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @FutureOrPresent
+    @FutureOrPresent(message = "Check-in date must be today or in the future")
+    @NotNull(message = "Arrival date is required")
     @Column(name = "check_in_date", nullable = false)
     private LocalDate checkInDate;
 
-    @Future
+    @Future(message = "The departure date must be in the future.")
+    @NotNull(message = "Departure date is required.")
     @Column(name = "check_out_date", nullable = false)
     private LocalDate checkOutDate;
 
+    @NotNull(message = "Housing is mandatory")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "accommodation_id", nullable = false)
     private Accommodation accommodation;
 
+    @NotNull(message = "User required")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @NotNull(message = "Booking status is required")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private BookingStatus status;

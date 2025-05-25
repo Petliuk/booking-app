@@ -1,13 +1,15 @@
 package com.example.bookingapp.controller;
 
-import com.example.bookingapp.dto.UserLoginRequestDto;
-import com.example.bookingapp.dto.UserLoginResponseDto;
-import com.example.bookingapp.dto.UserRegistrationRequestDto;
-import com.example.bookingapp.dto.UserResponseDto;
+import com.example.bookingapp.dto.user.UserLoginRequestDto;
+import com.example.bookingapp.dto.user.UserLoginResponseDto;
+import com.example.bookingapp.dto.user.UserRegistrationRequestDto;
+import com.example.bookingapp.dto.user.UserResponseDto;
 import com.example.bookingapp.exception.RegistrationException;
 import com.example.bookingapp.security.AuthenticationService;
 import com.example.bookingapp.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,21 +28,25 @@ public class AuthController {
     private final UserService userService;
     private final AuthenticationService authenticationService;
 
-    @Operation(summary = "Register a new user",
-            description = "Registers a new user in the system and returns user details")
     @PostMapping("/register")
+    @Operation(summary = "User registration", description = "Registers a new user in the system")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "User registered"),
+            @ApiResponse(responseCode = "400", description = "Invalid data or email already taken")
+    })
     public UserResponseDto registerUser(@RequestBody @Valid UserRegistrationRequestDto requestDto)
             throws RegistrationException {
         return userService.register(requestDto);
     }
 
-    @Operation(summary = "User login",
-            description = "Authenticates a user and returns an access token")
     @PostMapping("/login")
+    @Operation(summary = "User login",
+            description = "Authenticates the user and returns a JWT token")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Login successful"),
+            @ApiResponse(responseCode = "401", description = "Invalid credentials")
+    })
     public UserLoginResponseDto login(@RequestBody @Valid UserLoginRequestDto request) {
         return authenticationService.authenticate(request);
     }
-
-    /* POST: /register - Allows users to register a new account.
-        POST: /login - Grants JWT tokens to authenticated users.*/
 }

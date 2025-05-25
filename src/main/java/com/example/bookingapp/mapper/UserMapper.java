@@ -1,8 +1,8 @@
 package com.example.bookingapp.mapper;
 
 import com.example.bookingapp.config.MapperConfig;
-import com.example.bookingapp.dto.UserRegistrationRequestDto;
-import com.example.bookingapp.dto.UserResponseDto;
+import com.example.bookingapp.dto.user.UserRegistrationRequestDto;
+import com.example.bookingapp.dto.user.UserResponseDto;
 import com.example.bookingapp.model.User;
 import org.mapstruct.Mapper;
 

@@ -11,13 +11,13 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
@@ -30,16 +30,20 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Email
+    @Email(message = "Email must be valid")
+    @NotBlank(message = "Email is required")
     @Column(nullable = false, unique = true)
     private String email;
 
+    @NotBlank(message = "Name is required")
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
+    @NotBlank(message = "Last name is required")
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
+    @NotBlank(message = "Password required")
     @Column(nullable = false)
     private String password;
 
@@ -53,9 +57,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
-                .toList();
+        return roles;
     }
 
     @Override
