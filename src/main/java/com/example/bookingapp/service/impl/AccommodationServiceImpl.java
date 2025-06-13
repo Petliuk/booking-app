@@ -1,12 +1,14 @@
 package com.example.bookingapp.service.impl;
 
 import com.example.bookingapp.dto.accommodation.AccommodationDto;
+import com.example.bookingapp.dto.accommodation.AccommodationSearchParametersDto;
 import com.example.bookingapp.exception.EntityNotFoundException;
 import com.example.bookingapp.exception.InvalidRequestException;
 import com.example.bookingapp.mapper.AccommodationMapper;
 import com.example.bookingapp.model.Accommodation;
 import com.example.bookingapp.model.Booking;
 import com.example.bookingapp.repository.accommodation.AccommodationRepository;
+import com.example.bookingapp.repository.accommodation.AccommodationSpecificationBuilder;
 import com.example.bookingapp.repository.booking.BookingRepository;
 import com.example.bookingapp.service.AccommodationService;
 import jakarta.transaction.Transactional;
@@ -14,6 +16,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +25,7 @@ public class AccommodationServiceImpl implements AccommodationService {
     private final AccommodationRepository accommodationRepository;
     private final AccommodationMapper accommodationMapper;
     private final BookingRepository bookingRepository;
+    private final AccommodationSpecificationBuilder accommodationSpecificationBuilder;
 
     @Override
     @Transactional
@@ -67,25 +71,34 @@ public class AccommodationServiceImpl implements AccommodationService {
     public void delete(Long id) {
         validateId(id);
         accommodationRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Житло з ID "
-                        + id + " не знайдено"));
+                .orElseThrow(() -> new EntityNotFoundException("Housing with ID "
+                        + id + "not found"));
         if (bookingRepository.existsByAccommodationIdAndStatusNot(id,
                 Booking.BookingStatus.CANCELED)) {
-            throw new InvalidRequestException("Неможливо видалити житло "
-                    + "з активними бронюваннями");
+            throw new InvalidRequestException("Unable to delete a listing with active bookings");
         }
         accommodationRepository.deleteById(id);
     }
 
     private void validateAccommodationDto(AccommodationDto dto) {
         if (dto == null) {
-            throw new InvalidRequestException("DTO житла не може бути null");
+            throw new InvalidRequestException("DTO of housing cannot be null");
         }
     }
 
     private void validateId(Long id) {
         if (id == null || id <= 0) {
-            throw new InvalidRequestException("ID має бути позитивним числом");
+            throw new InvalidRequestException("ID must be a positive number");
         }
+    }
+
+    @Override
+    public List<AccommodationDto> search(AccommodationSearchParametersDto params) {
+        Specification<Accommodation> accommodationSpecification
+                = accommodationSpecificationBuilder.build(params);
+        return accommodationRepository.findAll(accommodationSpecification)
+                .stream()
+                .map(accommodationMapper::toDto)
+                .toList();
     }
 }

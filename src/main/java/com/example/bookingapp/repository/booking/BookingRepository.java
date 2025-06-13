@@ -27,4 +27,11 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                                                 Booking.BookingStatus status);
 
     List<Booking> findByStatus(Booking.BookingStatus status);
+
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.accommodation.id = :accommodationId "
+            + "AND b.status != :status "
+            + "AND (b.checkInDate <= :checkOutDate AND b.checkOutDate >= :checkInDate)")
+    long countByAccommodationIdAndStatusNotAndDateOverlap(
+            Long accommodationId, Booking.BookingStatus status,
+            LocalDate checkInDate, LocalDate checkOutDate);
 }

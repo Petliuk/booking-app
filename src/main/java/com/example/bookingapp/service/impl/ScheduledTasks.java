@@ -20,7 +20,7 @@ public class ScheduledTasks {
     public void checkExpiredBookings() {
         List<Booking> expiredBookings = bookingService.findExpiredBookings();
         if (expiredBookings.isEmpty()) {
-            notificationService.sendNotification("Сьогодні немає прострочених бронювань!");
+            notificationService.sendNotification("No overdue reservations today!");
             return;
         }
         for (Booking booking : expiredBookings) {

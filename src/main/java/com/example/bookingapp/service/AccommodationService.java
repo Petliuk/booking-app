@@ -1,6 +1,7 @@
 package com.example.bookingapp.service;
 
 import com.example.bookingapp.dto.accommodation.AccommodationDto;
+import com.example.bookingapp.dto.accommodation.AccommodationSearchParametersDto;
 import java.util.List;
 
 public interface AccommodationService {
@@ -13,4 +14,6 @@ public interface AccommodationService {
     AccommodationDto update(Long id, AccommodationDto dto);
 
     void delete(Long id);
+
+    List<AccommodationDto> search(AccommodationSearchParametersDto params);
 }

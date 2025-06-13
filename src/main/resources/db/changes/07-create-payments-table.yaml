@@ -27,10 +27,10 @@ databaseChangeLog:
                     references: bookings(id)
               - column:
                   name: session_url
-                  type: varchar(255)
+                  type: varchar(2048)
               - column:
                   name: session_id
-                  type: varchar(255)
+                  type: varchar(2048)
               - column:
                   name: amount_to_pay
                   type: decimal(10,2)

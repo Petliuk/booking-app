@@ -39,7 +39,7 @@ public class TelegramNotificationService extends
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
-            throw new RuntimeException("Не вдалося відправити повідомлення в Telegram: "
+            throw new RuntimeException("Failed to send message to Telegram: "
                     + e.getMessage());
         }
     }
