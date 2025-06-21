@@ -5,8 +5,6 @@ import com.example.bookingapp.dto.user.UserRegistrationRequestDto;
 import com.example.bookingapp.dto.user.UserResponseDto;
 import com.example.bookingapp.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,10 +27,6 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Get user profile",
             description = "Returns the current authenticated user's profile data")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Profile retrieved"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized access")
-    })
     public UserResponseDto getProfile() {
         return userService.getCurrentUser();
     }
@@ -41,11 +35,6 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Update user profile",
             description = "Updates the profile data of the current user")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Profile updated"),
-            @ApiResponse(responseCode = "400", description = "Invalid data"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized access")
-    })
     public UserResponseDto updateProfile(@RequestBody @Valid UserRegistrationRequestDto request) {
         return userService.updateCurrentUser(request);
     }
@@ -54,12 +43,6 @@ public class UserController {
     @PreAuthorize("hasAuthority('MANAGER')")
     @Operation(summary = "Update user role",
             description = "Changes the user's role (available to managers only)")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Role updated"),
-            @ApiResponse(responseCode = "400", description = "Invalid role"),
-            @ApiResponse(responseCode = "403", description = "Access denied"),
-            @ApiResponse(responseCode = "404", description = "User not found")
-    })
     public UserResponseDto updateRole(@PathVariable Long id,
                                       @RequestBody @Valid RoleUpdateDto roleUpdateDto) {
         return userService.updateRole(id, roleUpdateDto.getRoleName());

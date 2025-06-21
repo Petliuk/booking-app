@@ -1,11 +1,9 @@
 package com.example.bookingapp.controller;
 
-import com.example.bookingapp.dto.booking.BookingDto;
+import com.example.bookingapp.dto.booking.BookingResponseDto;
 import com.example.bookingapp.dto.booking.CreateBookingDto;
 import com.example.bookingapp.service.BookingService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -32,13 +30,7 @@ public class BookingController {
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Create booking",
             description = "Creates a new booking for the authenticated user")
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Booking created"),
-            @ApiResponse(responseCode = "400",
-                    description = "Invalid data or accommodation unavailable"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized access")
-    })
-    public BookingDto create(@RequestBody @Valid CreateBookingDto dto) {
+    public BookingResponseDto create(@RequestBody @Valid CreateBookingDto dto) {
         return bookingService.create(dto);
     }
 
@@ -46,11 +38,7 @@ public class BookingController {
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Get user bookings",
             description = "Returns a list of bookings for the current user")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "List of bookings"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized access")
-    })
-    public List<BookingDto> getMyBookings() {
+    public List<BookingResponseDto> getMyBookings() {
         return bookingService.findByCurrentUser();
     }
 
@@ -58,12 +46,7 @@ public class BookingController {
     @PreAuthorize("hasAuthority('MANAGER')")
     @Operation(summary = "Get bookings with filters",
             description = "Returns a list of bookings by user ID and/or status (for managers only)")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "List of bookings"),
-            @ApiResponse(responseCode = "403", description = "Access forbidden"),
-            @ApiResponse(responseCode = "400", description = "Invalid status")
-    })
-    public List<BookingDto> list(
+    public List<BookingResponseDto> list(
             @RequestParam(required = false) Long userId,
             @RequestParam(required = false) String status) {
         return bookingService.findAll(userId, status);
@@ -73,13 +56,7 @@ public class BookingController {
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Get booking by ID",
             description = "Returns booking details for the owner or manager")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Booking found"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized access"),
-            @ApiResponse(responseCode = "403", description = "Access forbidden"),
-            @ApiResponse(responseCode = "404", description = "Booking not found")
-    })
-    public BookingDto getById(@PathVariable Long id) {
+    public BookingResponseDto getById(@PathVariable Long id) {
         return bookingService.findById(id);
     }
 
@@ -87,14 +64,8 @@ public class BookingController {
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Update booking",
             description = "Updates booking details for the owner or manager")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Booking updated"),
-            @ApiResponse(responseCode = "400", description = "Invalid data"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized access"),
-            @ApiResponse(responseCode = "403", description = "Access forbidden"),
-            @ApiResponse(responseCode = "404", description = "Booking not found")
-    })
-    public BookingDto update(@PathVariable Long id, @RequestBody @Valid BookingDto dto) {
+    public BookingResponseDto update(@PathVariable Long id,
+                                     @RequestBody @Valid BookingResponseDto dto) {
         return bookingService.update(id, dto);
     }
 
@@ -102,15 +73,7 @@ public class BookingController {
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Cancel booking",
             description = "Cancels booking for the owner or manager")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Booking canceled"),
-            @ApiResponse(responseCode = "400", description = "Booking already canceled"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized access"),
-            @ApiResponse(responseCode = "403", description = "Access forbidden"),
-            @ApiResponse(responseCode = "404", description = "Booking not found")
-    })
     public void cancel(@PathVariable Long id) {
         bookingService.cancel(id);
     }
-
 }

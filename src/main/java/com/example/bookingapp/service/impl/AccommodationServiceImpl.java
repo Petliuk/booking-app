@@ -2,6 +2,7 @@ package com.example.bookingapp.service.impl;
 
 import com.example.bookingapp.dto.accommodation.AccommodationDto;
 import com.example.bookingapp.dto.accommodation.AccommodationSearchParametersDto;
+import com.example.bookingapp.dto.accommodation.CreateAccommodationRequestDto;
 import com.example.bookingapp.exception.EntityNotFoundException;
 import com.example.bookingapp.exception.InvalidRequestException;
 import com.example.bookingapp.mapper.AccommodationMapper;
@@ -14,8 +15,9 @@ import com.example.bookingapp.service.AccommodationService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -29,17 +31,16 @@ public class AccommodationServiceImpl implements AccommodationService {
 
     @Override
     @Transactional
-    public AccommodationDto create(@Valid AccommodationDto dto) {
+    public AccommodationDto create(@Valid CreateAccommodationRequestDto dto) {
         validateAccommodationDto(dto);
         Accommodation accommodation = accommodationMapper.toEntity(dto);
         return accommodationMapper.toDto(accommodationRepository.save(accommodation));
     }
 
     @Override
-    public List<AccommodationDto> findAll() {
-        return accommodationRepository.findAll().stream()
-                .map(accommodationMapper::toDto)
-                .collect(Collectors.toList());
+    public Page<AccommodationDto> findAll(Pageable pageable) {
+        return accommodationRepository.findAll(pageable)
+                .map(accommodationMapper::toDto);
     }
 
     @Override
@@ -80,7 +81,7 @@ public class AccommodationServiceImpl implements AccommodationService {
         accommodationRepository.deleteById(id);
     }
 
-    private void validateAccommodationDto(AccommodationDto dto) {
+    private void validateAccommodationDto(Object dto) {
         if (dto == null) {
             throw new InvalidRequestException("DTO of housing cannot be null");
         }

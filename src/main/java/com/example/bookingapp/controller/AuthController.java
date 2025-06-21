@@ -8,8 +8,6 @@ import com.example.bookingapp.exception.RegistrationException;
 import com.example.bookingapp.security.AuthenticationService;
 import com.example.bookingapp.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,10 +28,6 @@ public class AuthController {
 
     @PostMapping("/register")
     @Operation(summary = "User registration", description = "Registers a new user in the system")
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "User registered"),
-            @ApiResponse(responseCode = "400", description = "Invalid data or email already taken")
-    })
     public UserResponseDto registerUser(@RequestBody @Valid UserRegistrationRequestDto requestDto)
             throws RegistrationException {
         return userService.register(requestDto);
@@ -42,10 +36,6 @@ public class AuthController {
     @PostMapping("/login")
     @Operation(summary = "User login",
             description = "Authenticates the user and returns a JWT token")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Login successful"),
-            @ApiResponse(responseCode = "401", description = "Invalid credentials")
-    })
     public UserLoginResponseDto login(@RequestBody @Valid UserLoginRequestDto request) {
         return authenticationService.authenticate(request);
     }

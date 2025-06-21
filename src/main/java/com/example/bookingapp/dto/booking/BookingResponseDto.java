@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import lombok.Data;
 
 @Data
-public class BookingDto {
+public class BookingResponseDto {
     private Long id;
 
     @FutureOrPresent(message = "Check-in date must be today or in the future")

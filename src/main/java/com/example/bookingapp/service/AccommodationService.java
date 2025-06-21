@@ -2,12 +2,15 @@ package com.example.bookingapp.service;
 
 import com.example.bookingapp.dto.accommodation.AccommodationDto;
 import com.example.bookingapp.dto.accommodation.AccommodationSearchParametersDto;
+import com.example.bookingapp.dto.accommodation.CreateAccommodationRequestDto;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface AccommodationService {
-    AccommodationDto create(AccommodationDto dto);
+    AccommodationDto create(CreateAccommodationRequestDto dto);
 
-    List<AccommodationDto> findAll();
+    Page<AccommodationDto> findAll(Pageable pageable);
 
     AccommodationDto findById(Long id);
 

@@ -1,6 +1,6 @@
 package com.example.bookingapp.service.impl;
 
-import com.example.bookingapp.dto.booking.BookingDto;
+import com.example.bookingapp.dto.booking.BookingResponseDto;
 import com.example.bookingapp.dto.booking.CreateBookingDto;
 import com.example.bookingapp.exception.AccessDeniedException;
 import com.example.bookingapp.exception.EntityNotFoundException;
@@ -28,7 +28,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
-
     private final BookingRepository bookingRepository;
     private final AccommodationRepository accommodationRepository;
     private final UserRepository userRepository;
@@ -38,7 +37,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingDto create(@Valid CreateBookingDto dto) {
+    public BookingResponseDto create(@Valid CreateBookingDto dto) {
         User user = getCurrentUser();
         paymentService.checkPendingPayments(user.getId());
         validateCreateBookingDto(dto);
@@ -59,13 +58,13 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> findByCurrentUser() {
+    public List<BookingResponseDto> findByCurrentUser() {
         User user = getCurrentUser();
         return mapToDtoList(bookingRepository.findByUserId(user.getId()));
     }
 
     @Override
-    public List<BookingDto> findAll(Long userId, String status) {
+    public List<BookingResponseDto> findAll(Long userId, String status) {
         List<Booking> bookings;
         if (userId != null && status != null) {
             Booking.BookingStatus bookingStatus = parseBookingStatus(status);
@@ -84,7 +83,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingDto findById(Long id) {
+    public BookingResponseDto findById(Long id) {
         validateId(id);
         Booking booking = getBookingById(id);
         validateUserAccess(booking);
@@ -93,7 +92,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingDto update(Long id, @Valid BookingDto dto) {
+    public BookingResponseDto update(Long id, @Valid BookingResponseDto dto) {
         validateId(id);
         validateBookingDto(dto);
         Booking booking = getBookingById(id);
@@ -178,7 +177,7 @@ public class BookingServiceImpl implements BookingService {
         validateDates(dto.getCheckInDate(), dto.getCheckOutDate());
     }
 
-    private void validateBookingDto(BookingDto dto) {
+    private void validateBookingDto(BookingResponseDto dto) {
         validateDates(dto.getCheckInDate(),
                 dto.getCheckOutDate());
     }
@@ -253,7 +252,7 @@ public class BookingServiceImpl implements BookingService {
         notificationService.sendNotification(String.format(format, args));
     }
 
-    private List<BookingDto> mapToDtoList(List<Booking> bookings) {
+    private List<BookingResponseDto> mapToDtoList(List<Booking> bookings) {
         return bookings.stream().map(bookingMapper::toDto).toList();
     }
 }
