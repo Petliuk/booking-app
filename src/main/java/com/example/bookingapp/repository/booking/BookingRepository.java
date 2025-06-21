@@ -10,17 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-/*
-    @Query("SELECT COUNT(b) > 0 FROM Booking b WHERE b.accommodation.id = :accommodationId "
-            + "AND b.status != :status "
-            + "AND (b.checkInDate <= :checkOutDate AND b.checkOutDate >= :checkInDate)")
-    boolean existsByAccommodationIdAndStatusNotAndDateOverlap(
-            Long accommodationId,
-            Booking.BookingStatus status,
-            LocalDate checkInDate,
-            LocalDate checkOutDate);
-*/
-
     List<Booking> findByUserId(Long userId);
 
     @Query("SELECT COUNT(b) > 0 FROM Booking b WHERE b.accommodation.id = :accommodationId "
