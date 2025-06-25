@@ -17,9 +17,12 @@ public class TelegramNotificationService extends
     @Value("${telegram.chat.id}")
     private String chatId;
 
+    @Value("${telegram.username}")
+    private String username;
+
     @Override
     public String getBotUsername() {
-        return "SmartBookingX_bot";
+        return username;
     }
 
     @Override

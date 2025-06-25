@@ -1,5 +1,6 @@
 package com.example.bookingapp.dto.user;
 
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,4 +15,5 @@ public class UserResponseDto {
     private String email;
     private String firstName;
     private String lastName;
+    private Set<String> roles;
 }
