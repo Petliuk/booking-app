@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -21,16 +22,19 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AuthControllerTest {
-    protected static MockMvc mockMvc;
+    protected MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private WebApplicationContext applicationContext;
+
     @BeforeAll
-    static void beforeAll(@Autowired WebApplicationContext applicationContext) {
+    void beforeAll() {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(applicationContext)
                 .apply(springSecurity())

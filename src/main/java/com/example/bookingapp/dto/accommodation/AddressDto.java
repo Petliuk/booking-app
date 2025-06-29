@@ -5,15 +5,15 @@ import lombok.Data;
 
 @Data
 public class AddressDto {
-    @NotBlank(message = "Вулиця обов’язкова")
+    @NotBlank(message = "Street is required")
     private String street;
 
-    @NotBlank(message = "Місто обов’язкове")
+    @NotBlank(message = "City is required")
     private String city;
 
-    @NotBlank(message = "Країна обов’язкова")
+    @NotBlank(message = "Country is required")
     private String country;
 
-    @NotBlank(message = "Поштовий код обов’язковий")
+    @NotBlank(message = "Postal code is required")
     private String postalCode;
 }

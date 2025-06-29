@@ -73,5 +73,4 @@ public class AccommodationServiceTest {
         // Then
         assertThrows(EntityNotFoundException.class, () -> accommodationService.findById(validId));
     }
-
 }

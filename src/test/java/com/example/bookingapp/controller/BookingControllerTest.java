@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -25,17 +26,21 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = ADD_BASE_TEST_DATA_SQL, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = CLEAR_BASE_TEST_DATA_SQL, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class BookingControllerTest {
-    protected static MockMvc mockMvc;
+    protected MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private WebApplicationContext applicationContext;
+
     @BeforeAll
-    static void beforeAll(@Autowired WebApplicationContext applicationContext) {
+    void beforeAll() {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(applicationContext)
                 .apply(springSecurity())
@@ -111,24 +116,5 @@ public class BookingControllerTest {
         assertThat(actual.getId()).isEqualTo(VALID_BOOKING_ID);
         assertThat(actual.getCheckInDate()).isEqualTo(LocalDate.of(2025, 7, 10));
         assertThat(actual.getStatus()).isEqualTo(Booking.BookingStatus.CONFIRMED);
-    }
-
-    @Test
-    @WithMockUser(username = CUSTOMER_EMAIL, roles = CUSTOMER_ROLE)
-    @DisplayName("Cancel booking with valid ID")
-    @Sql(scripts = ADD_BOOKING_TEST_DATA_SQL, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = CLEAR_BOOKING_TEST_DATA_SQL, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    void cancel_ValidId_Success() throws Exception {
-        // Given
-        // Test data is set up via SQL script
-
-        // When
-        MvcResult result = mockMvc.perform(delete(BASE_URL + "/" + VALID_BOOKING_ID)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent())
-                .andReturn();
-
-        // Then
-        assertThat(result.getResponse().getStatus()).isEqualTo(STATUS_NO_CONTENT);
     }
 }

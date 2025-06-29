@@ -5,7 +5,6 @@ import com.example.bookingapp.dto.user.UserRegistrationRequestDto;
 import com.example.bookingapp.model.Role;
 import com.example.bookingapp.model.User;
 
-
 public class UserUtils implements CommonTestConstants {
     public static final String BASE_URL = "/users";
     public static final String ME_ENDPOINT = "/me";

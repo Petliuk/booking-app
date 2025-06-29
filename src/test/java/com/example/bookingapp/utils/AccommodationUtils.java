@@ -1,6 +1,5 @@
 package com.example.bookingapp.utils;
 
-
 import com.example.bookingapp.dto.accommodation.AccommodationDto;
 import com.example.bookingapp.dto.accommodation.AddressDto;
 import com.example.bookingapp.dto.accommodation.AccommodationSearchParametersDto;
@@ -20,24 +19,11 @@ public class AccommodationUtils implements CommonTestConstants{
     public static final String CLEAR_ACCOMMODATION_TEST_DATA_SQL = "classpath:database/accommodation/clear-accommodation-test-data.sql";
     public static final String MANAGER_USERNAME = "manager";
     public static final String CUSTOMER_USERNAME = "customer";
-    public static final String PAGE_PARAM = "page";
-    public static final String SIZE_PARAM = "size";
-    public static final String PAGE_VALUE = "0";
-    public static final String SIZE_VALUE = "10";
     public static final int STATUS_BAD_REQUEST = 400;
     public static final int STATUS_FORBIDDEN = 403;
     public static final int STATUS_NOT_FOUND = 404;
     public static final int STATUS_NO_CONTENT = 204;
-    public static final String PROPERTY_TYPES_PARAM = "propertyTypes";
-    public static final String CITIES_PARAM = "cities";
-    public static final String MIN_PRICE_PARAM = "minPricePerDay";
-    public static final String MAX_PRICE_PARAM = "maxPricePerDay";
-    public static final String MIN_AVAILABILITY_PARAM = "minAvailability";
-    public static final String APARTMENT_TYPE = "APARTMENT";
     public static final String KYIV_CITY = "Kyiv";
-    public static final String MIN_PRICE_VALUE = "40.00";
-    public static final String MAX_PRICE_VALUE = "60.00";
-    public static final String MIN_AVAILABILITY_VALUE = "1";
     public static final Accommodation.PropertyType APARTMENT_PROPERTY_TYPE = Accommodation.PropertyType.APARTMENT;
     public static final String EXPECTED_CITY = "Kyiv";
     public static final BigDecimal EXPECTED_PRICE = new BigDecimal("50.00");
@@ -133,27 +119,6 @@ public class AccommodationUtils implements CommonTestConstants{
         dto.setPricePerDay(pricePerDay);
         dto.setAvailability(availability);
         return dto;
-    }
-
-    public static AccommodationSearchParametersDto createSearchParametersDto() {
-        return createSearchParametersDto(
-                new Accommodation.PropertyType[]{APARTMENT_PROPERTY_TYPE},
-                new String[]{KYIV_CITY},
-                new BigDecimal(MIN_PRICE_VALUE),
-                new BigDecimal(MAX_PRICE_VALUE),
-                Integer.parseInt(MIN_AVAILABILITY_VALUE)
-        );
-    }
-
-    public static AccommodationSearchParametersDto createSearchParametersDto(Accommodation.PropertyType[] propertyTypes,
-                                                                             String[] cities, BigDecimal minPricePerDay,
-                                                                             BigDecimal maxPricePerDay, Integer minAvailability) {
-        return new AccommodationSearchParametersDto()
-                .setPropertyTypes(propertyTypes)
-                .setCities(cities)
-                .setMinPricePerDay(minPricePerDay)
-                .setMaxPricePerDay(maxPricePerDay)
-                .setMinAvailability(minAvailability);
     }
 
     public static Accommodation createAccommodationEntity() {

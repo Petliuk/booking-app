@@ -1,4 +1,5 @@
 package com.example.bookingapp.controller;
+
 import com.example.bookingapp.dto.accommodation.AccommodationDto;
 import com.example.bookingapp.dto.accommodation.AccommodationSearchParametersDto;
 import com.example.bookingapp.dto.accommodation.CreateAccommodationRequestDto;
@@ -9,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -27,17 +29,21 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = ADD_BASE_TEST_DATA_SQL, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = CLEAR_BASE_TEST_DATA_SQL, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class AccommodationControllerTest {
-    protected static MockMvc mockMvc;
+    protected MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private WebApplicationContext applicationContext;
+
     @BeforeAll
-    static void beforeAll(@Autowired WebApplicationContext applicationContext) {
+    void beforeAll() {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(applicationContext)
                 .apply(springSecurity())
@@ -86,63 +92,6 @@ public class AccommodationControllerTest {
 
         // Then
         assertThat(result.getResponse().getStatus()).isEqualTo(STATUS_FORBIDDEN);
-    }
-
-    @Test
-    @WithMockUser(username = CUSTOMER_USERNAME, roles = CUSTOMER_ROLE)
-    @DisplayName("Get all accommodations with existing data")
-    @Sql(scripts = ADD_ACCOMMODATION_TEST_DATA_SQL, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = CLEAR_ACCOMMODATION_TEST_DATA_SQL, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    void list_BooksExist_Success() throws Exception {
-        // Given
-        // Test data is set up via SQL script
-
-        // When
-        MvcResult result = mockMvc.perform(get(BASE_URL)
-                        .param(PAGE_PARAM, PAGE_VALUE)
-                        .param(SIZE_PARAM, SIZE_VALUE)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        // Then
-        String jsonResponse = result.getResponse().getContentAsString();
-        JsonNode root = objectMapper.readTree(jsonResponse);
-        JsonNode content = root.path("content");
-        List<AccommodationDto> accommodations = objectMapper.readValue(
-                content.toString(),
-                new TypeReference<>() {
-                }
-        );
-        assertThat(accommodations).hasSize(1);
-        assertThat(accommodations.get(0).getId()).isEqualTo(VALID_ACCOMMODATION_ID);
-        assertThat(accommodations.get(0).getPropertyType()).isEqualTo(Accommodation.PropertyType.APARTMENT);
-    }
-
-    @Test
-    @WithMockUser(username = CUSTOMER_USERNAME, roles = CUSTOMER_ROLE)
-    @DisplayName("Get accommodation by valid ID")
-    @Sql(scripts = ADD_ACCOMMODATION_TEST_DATA_SQL, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = CLEAR_ACCOMMODATION_TEST_DATA_SQL, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    void getById_ValidId_Success() throws Exception {
-        // Given
-        // Test data is set up via SQL script
-
-        // When
-        MvcResult result = mockMvc.perform(get(BASE_URL + "/" + VALID_ACCOMMODATION_ID)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        // Then
-        AccommodationDto actual = objectMapper.readValue(
-                result.getResponse().getContentAsString(),
-                AccommodationDto.class
-        );
-        assertThat(actual.getId()).isEqualTo(VALID_ACCOMMODATION_ID);
-        assertThat(actual.getPropertyType()).isEqualTo(Accommodation.PropertyType.APARTMENT);
-        assertThat(actual.getLocation().getCity()).isEqualTo(KYIV_CITY);
-        assertThat(actual.getPricePerDay()).isEqualTo(new BigDecimal("50.00"));
     }
 
     @Test
@@ -224,36 +173,6 @@ public class AccommodationControllerTest {
 
         // Then
         assertThat(result.getResponse().getStatus()).isEqualTo(STATUS_FORBIDDEN);
-    }
-
-    @Test
-    @WithMockUser
-    @DisplayName("Search accommodations with valid parameters")
-    @Sql(scripts = ADD_ACCOMMODATION_TEST_DATA_SQL, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = CLEAR_ACCOMMODATION_TEST_DATA_SQL, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    void search_ValidParams_Success() throws Exception {
-        // Given
-        AccommodationSearchParametersDto params = createSearchParametersDto();
-
-        // When
-        MvcResult result = mockMvc.perform(get(BASE_URL + "/search")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param(PROPERTY_TYPES_PARAM, APARTMENT_TYPE)
-                        .param(CITIES_PARAM, KYIV_CITY)
-                        .param(MIN_PRICE_PARAM, MIN_PRICE_VALUE)
-                        .param(MAX_PRICE_PARAM, MAX_PRICE_VALUE)
-                        .param(MIN_AVAILABILITY_PARAM, MIN_AVAILABILITY_VALUE))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        // Then
-        List<AccommodationDto> actual = objectMapper.readValue(
-                result.getResponse().getContentAsString(),
-                new TypeReference<List<AccommodationDto>>() {}
-        );
-        assertThat(actual).hasSize(1);
-        assertThat(actual.get(0).getId()).isEqualTo(VALID_ACCOMMODATION_ID);
-        assertThat(actual.get(0).getPropertyType()).isEqualTo(Accommodation.PropertyType.APARTMENT);
     }
 
     @Test

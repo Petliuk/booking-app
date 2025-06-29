@@ -11,5 +11,4 @@ class BookingAppApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }

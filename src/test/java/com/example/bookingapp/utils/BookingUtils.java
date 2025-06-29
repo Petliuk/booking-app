@@ -8,9 +8,8 @@ import com.example.bookingapp.model.Booking;
 import com.example.bookingapp.model.User;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
-public class BookingUtils implements CommonTestConstants{
+public class BookingUtils implements CommonTestConstants {
 
     public static final String BASE_URL = "/bookings";
     public static final String MY_BOOKINGS_ENDPOINT = "/my";
