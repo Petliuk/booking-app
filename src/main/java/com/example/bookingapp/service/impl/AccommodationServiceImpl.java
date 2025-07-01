@@ -47,7 +47,8 @@ public class AccommodationServiceImpl implements AccommodationService {
     public AccommodationDto findById(Long id) {
         validateId(id);
         Accommodation accommodation = accommodationRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Accommodation not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Accommodation with: "
+                        + id + "not found"));
         return accommodationMapper.toDto(accommodation);
     }
 
@@ -57,7 +58,8 @@ public class AccommodationServiceImpl implements AccommodationService {
         validateId(id);
         validateAccommodationDto(dto);
         Accommodation accommodation = accommodationRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Accommodation not found"));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Accommodation with: " + id + "not found"));
         accommodation.setPropertyType(dto.getPropertyType());
         accommodation.setLocation(accommodationMapper.toEntity(dto.getLocation()));
         accommodation.setSize(dto.getSize());
@@ -72,13 +74,25 @@ public class AccommodationServiceImpl implements AccommodationService {
     public void delete(Long id) {
         validateId(id);
         accommodationRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Housing with ID "
-                        + id + "not found"));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Housing with ID " + id + "not found"));
         if (bookingRepository.existsByAccommodationIdAndStatusNot(id,
                 Booking.BookingStatus.CANCELED)) {
-            throw new InvalidRequestException("Unable to delete a listing with active bookings");
+            throw new InvalidRequestException(
+                    "Unable to delete accommodation with ID "
+                            + id + " because it has active bookings");
         }
         accommodationRepository.deleteById(id);
+    }
+
+    @Override
+    public List<AccommodationDto> search(AccommodationSearchParametersDto params) {
+        Specification<Accommodation> accommodationSpecification
+                = accommodationSpecificationBuilder.build(params);
+        return accommodationRepository.findAll(accommodationSpecification)
+                .stream()
+                .map(accommodationMapper::toDto)
+                .toList();
     }
 
     private void validateAccommodationDto(Object dto) {
@@ -91,15 +105,5 @@ public class AccommodationServiceImpl implements AccommodationService {
         if (id == null || id <= 0) {
             throw new InvalidRequestException("ID must be a positive number");
         }
-    }
-
-    @Override
-    public List<AccommodationDto> search(AccommodationSearchParametersDto params) {
-        Specification<Accommodation> accommodationSpecification
-                = accommodationSpecificationBuilder.build(params);
-        return accommodationRepository.findAll(accommodationSpecification)
-                .stream()
-                .map(accommodationMapper::toDto)
-                .toList();
     }
 }

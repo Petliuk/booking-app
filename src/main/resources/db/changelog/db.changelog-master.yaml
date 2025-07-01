@@ -4,7 +4,7 @@ databaseChangeLog:
   - include:
       file: db/changes/02-create-roles-table.yaml
   - include:
-      file: db/changes/03-create-user-roles-table.yaml
+      file: db/changes/03-create-users-roles-table.yaml
   - include:
       file: db/changes/04-create-accommodations-table.yaml
   - include:

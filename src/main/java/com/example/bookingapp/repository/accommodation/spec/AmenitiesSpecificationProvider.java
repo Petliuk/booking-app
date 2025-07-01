@@ -16,10 +16,12 @@ public class AmenitiesSpecificationProvider implements SpecificationProvider<Acc
 
     @Override
     public Specification<Accommodation> getSpecification(String[] params) {
-        return (root, query, criteriaBuilder) -> {
+        return (root,
+                query,
+                criteriaBuilder) -> {
             Predicate[] predicates = new Predicate[params.length];
             for (int i = 0; i < params.length; i++) {
-                predicates[i] = criteriaBuilder.isMember(params[i], root.get("amenities"));
+                predicates[i] = criteriaBuilder.isMember(params[i], root.get(Constants.AMENITIES));
             }
             return criteriaBuilder.and(predicates);
         };

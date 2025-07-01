@@ -15,6 +15,6 @@ public class CountriesSpecificationProvider implements SpecificationProvider<Acc
 
     public Specification<Accommodation> getSpecification(String[] params) {
         return (root, query, criteriaBuilder) ->
-                root.get("location").get("country").in((Object[]) params);
+                root.get(Constants.LOCATION).get(Constants.COUNTRY).in((Object[]) params);
     }
 }

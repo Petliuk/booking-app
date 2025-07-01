@@ -15,6 +15,6 @@ public class PostalCodesSpecificationProvider implements SpecificationProvider<A
 
     public Specification<Accommodation> getSpecification(String[] params) {
         return (root, query, criteriaBuilder) ->
-                root.get("location").get("postalCode").in((Object[]) params);
+                root.get(Constants.LOCATION).get(Constants.POSTAL_CODE).in((Object[]) params);
     }
 }

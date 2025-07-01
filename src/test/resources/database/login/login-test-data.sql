@@ -1,4 +1,4 @@
-DELETE FROM user_roles;
+DELETE FROM users_roles;
 DELETE FROM roles;
 DELETE FROM users;
 
@@ -13,5 +13,4 @@ VALUES (
            'Doe'
        );
 
--- Прив’язка користувача до ролі
-INSERT INTO user_roles (user_id, role_id) VALUES (1, 1);
+INSERT INTO users_roles (user_id, role_id) VALUES (1, 1);

@@ -42,7 +42,7 @@ public class AccommodationController {
     @GetMapping
     @Operation(summary = "Get all accommodations",
             description = "Returns a list of all available homes")
-    public Page<AccommodationDto> list(Pageable pageable) {
+    public Page<AccommodationDto> getAllAccommodations(Pageable pageable) {
         return accommodationService.findAll(pageable);
     }
 

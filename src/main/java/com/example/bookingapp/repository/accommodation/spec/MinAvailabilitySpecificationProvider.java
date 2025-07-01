@@ -16,6 +16,7 @@ public class MinAvailabilitySpecificationProvider implements SpecificationProvid
     public Specification<Accommodation> getSpecification(String[] params) {
         Integer minAvailability = Integer.parseInt(params[0]);
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.greaterThanOrEqualTo(root.get("availability"), minAvailability);
+                criteriaBuilder.greaterThanOrEqualTo(root.get(Constants.AVAILABILITY),
+                        minAvailability);
     }
 }

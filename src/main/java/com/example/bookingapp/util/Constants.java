@@ -4,14 +4,20 @@ import java.math.BigDecimal;
 
 public class Constants {
 
+    public static final String LOCATION = "location";
     public static final String PROPERTY_TYPES = "propertyTypes";
+    public static final String PROPERTY_TYPE = "propertyType";
     public static final String CITIES = "cities";
+    public static final String COUNTRY = "country";
     public static final String COUNTRIES = "countries";
     public static final String POSTAL_CODES = "postalCodes";
+    public static final String POSTAL_CODE = "postalCode";
     public static final String AMENITIES = "amenities";
     public static final String MIN_PRICE_PER_DAY = "minPricePerDay";
     public static final String MAX_PRICE_PER_DAY = "maxPricePerDay";
+    public static final String PRICE_PER_DAY = "pricePerDay";
     public static final String MIN_AVAILABILITY = "minAvailability";
+    public static final String AVAILABILITY = "availability";
     public static final String BEARER_FORMAT = "JWT";
     public static final String BEARER_PREFIX = "Bearer ";
     public static final String SCHEME_TYPE = "bearer";

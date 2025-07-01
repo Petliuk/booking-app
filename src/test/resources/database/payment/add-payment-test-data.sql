@@ -2,7 +2,7 @@ INSERT INTO users (id, email, first_name, last_name, password)
 VALUES (1, 'user@example.com', 'John', 'Doe', '$2a$10$hashedPassword123')
     ON DUPLICATE KEY UPDATE email=email;
 
-INSERT INTO user_roles (user_id, role_id)
+INSERT INTO users_roles (user_id, role_id)
 SELECT 1, id FROM roles WHERE name = 'CUSTOMER'
     ON DUPLICATE KEY UPDATE user_id=user_id;
 

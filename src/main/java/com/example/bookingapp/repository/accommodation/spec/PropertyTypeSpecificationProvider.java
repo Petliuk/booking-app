@@ -16,6 +16,6 @@ public class PropertyTypeSpecificationProvider implements SpecificationProvider<
     @Override
     public Specification<Accommodation> getSpecification(String[] params) {
         return (root, query, criteriaBuilder) ->
-                root.get("propertyType").in((Object[]) params);
+                root.get(Constants.PROPERTY_TYPE).in((Object[]) params);
     }
 }

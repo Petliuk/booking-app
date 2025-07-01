@@ -17,6 +17,6 @@ public class MinPricePerDaySpecificationProvider implements SpecificationProvide
     public Specification<Accommodation> getSpecification(String[] params) {
         BigDecimal minPrice = new BigDecimal(params[0]);
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.greaterThanOrEqualTo(root.get("pricePerDay"), minPrice);
+                criteriaBuilder.greaterThanOrEqualTo(root.get(Constants.PRICE_PER_DAY), minPrice);
     }
 }

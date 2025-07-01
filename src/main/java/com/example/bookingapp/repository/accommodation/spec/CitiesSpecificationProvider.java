@@ -15,6 +15,6 @@ public class CitiesSpecificationProvider implements SpecificationProvider<Accomm
 
     public Specification<Accommodation> getSpecification(String[] params) {
         return (root, query, criteriaBuilder) ->
-                root.get("location").get("city").in((Object[]) params);
+                root.get(Constants.LOCATION).get(Constants.CITIES).in((Object[]) params);
     }
 }

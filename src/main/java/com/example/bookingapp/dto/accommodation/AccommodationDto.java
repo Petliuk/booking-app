@@ -1,10 +1,9 @@
 package com.example.bookingapp.dto.accommodation;
 
 import com.example.bookingapp.model.Accommodation;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.util.List;
 import lombok.Data;
@@ -25,10 +24,10 @@ public class AccommodationDto {
     private List<String> amenities;
 
     @NotNull(message = "Daily price is required")
-    @DecimalMin(value = "0.01", message = "The price per day must be positive.")
+    @Positive(message = "The price per day must be positive")
     private BigDecimal pricePerDay;
 
     @NotNull(message = "Accessibility is a must")
-    @Min(value = 0, message = "Accessibility should be integral")
+    @Positive(message = "Availability must be a positive number")
     private Integer availability;
 }
