@@ -1,8 +1,9 @@
 package com.example.bookingapp.controller;
 
+import com.example.bookingapp.dto.user.ChangePasswordDto;
 import com.example.bookingapp.dto.user.RoleUpdateDto;
-import com.example.bookingapp.dto.user.UserRegistrationRequestDto;
 import com.example.bookingapp.dto.user.UserResponseDto;
+import com.example.bookingapp.dto.user.UserUpdateRequestDto;
 import com.example.bookingapp.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,8 +36,17 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Update user profile",
             description = "Updates the profile data of the current user")
-    public UserResponseDto updateProfile(@RequestBody @Valid UserRegistrationRequestDto request) {
+    public UserResponseDto updateProfile(@RequestBody @Valid UserUpdateRequestDto request) {
         return userService.updateCurrentUser(request);
+    }
+
+    @PutMapping("/me/password")
+    @PreAuthorize("isAuthenticated()")
+    @Operation(summary = "Change user password",
+            description = "Changes the password of the current "
+                    + "user after verifying the old password")
+    public UserResponseDto changePassword(@RequestBody @Valid ChangePasswordDto request) {
+        return userService.changePassword(request);
     }
 
     @PutMapping("/{id}/role")
@@ -44,7 +54,7 @@ public class UserController {
     @Operation(summary = "Update user role",
             description = "Changes the user's role (available to managers only)")
     public UserResponseDto updateRole(@PathVariable Long id,
-                                      @RequestBody @Valid RoleUpdateDto roleUpdateDto) {
-        return userService.updateRole(id, roleUpdateDto.getRoleName());
+                                      @RequestBody @Valid RoleUpdateDto dto) {
+        return userService.updateRole(id, dto.getRoleName());
     }
 }

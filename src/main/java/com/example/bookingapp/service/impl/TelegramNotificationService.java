@@ -2,6 +2,7 @@ package com.example.bookingapp.service.impl;
 
 import com.example.bookingapp.service.NotificationService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -35,6 +36,7 @@ public class TelegramNotificationService extends
     }
 
     @Override
+    @Async
     public void sendNotification(String message) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);

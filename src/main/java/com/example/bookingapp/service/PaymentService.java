@@ -24,4 +24,6 @@ public interface PaymentService {
     void checkPendingPayments(Long userId);
 
     Optional<Payment> findBySessionId(String sessionId);
+
+    void markPaymentAsExpired(Payment payment);
 }

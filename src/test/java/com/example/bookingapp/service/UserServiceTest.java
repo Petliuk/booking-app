@@ -2,8 +2,8 @@ package com.example.bookingapp.service;
 
 import com.example.bookingapp.dto.user.UserRegistrationRequestDto;
 import com.example.bookingapp.dto.user.UserResponseDto;
-import com.example.bookingapp.exception.InvalidRequestException;
 import com.example.bookingapp.exception.RegistrationException;
+import com.example.bookingapp.model.Role;
 import com.example.bookingapp.utils.CommonTestConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -83,14 +83,14 @@ public class UserServiceTest {
     void updateRole_ValidRole_ReturnsUpdatedDto() {
         // Given
         Long userId = VALID_USER_ID;
-        String roleName = MANAGER_ROLE_NAME;
+        Role.RoleName roleName = MANAGER_ROLE_NAME;
 
         // When
         UserResponseDto result = userService.updateRole(userId, roleName);
 
         // Then
         assertThat(result).isNotNull();
-        assertThat(result.getRoles()).contains(MANAGER_ROLE_NAME);
+        assertThat(result.getRoles()).contains(String.valueOf(roleName));
     }
 
     @Test
@@ -98,9 +98,10 @@ public class UserServiceTest {
     void updateRole_InvalidRoleName_ThrowsException() {
         // Given
         Long userId = VALID_USER_ID;
-        String invalidRoleName = INVALID_ROLE_NAME;
+        String invalidRoleName = "INVALID_ROLE";
 
         // When & Then
-        assertThrows(InvalidRequestException.class, () -> userService.updateRole(userId, invalidRoleName));
+        assertThrows(IllegalArgumentException.class,
+                () -> userService.updateRole(userId, Role.RoleName.valueOf(invalidRoleName)));
     }
 }

@@ -4,6 +4,11 @@ import java.math.BigDecimal;
 
 public class Constants {
 
+    public static final String SESSION_ID = "session_id";
+    public static final String ID = "id";
+    public static final String USER = "user";
+    public static final String USER_ID = "userId";
+    public static final String STATUS = "status";
     public static final String LOCATION = "location";
     public static final String PROPERTY_TYPES = "propertyTypes";
     public static final String PROPERTY_TYPE = "propertyType";
@@ -28,6 +33,7 @@ public class Constants {
     public static final String HTTPS_SCHEME = "https://";
     public static final long MILLISECONDS_TO_SECONDS_DIVIDER = 1000;
     public static final long NO_PENDING_PAYMENTS = 0;
+    public static final long LINE_ITEM_QUANTITY = 1L;
     public static final String PAID_STATUS = "paid";
     public static final String PAYMENT_CANCELED_MESSAGE =
             "Payment #%d for booking #%d canceled. "

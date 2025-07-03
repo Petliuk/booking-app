@@ -4,11 +4,13 @@ import com.example.bookingapp.model.Booking;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BookingRepository extends JpaRepository<Booking, Long> {
+public interface BookingRepository extends JpaRepository<Booking, Long>,
+        JpaSpecificationExecutor<Booking> {
 
     List<Booking> findByUserId(Long userId);
 

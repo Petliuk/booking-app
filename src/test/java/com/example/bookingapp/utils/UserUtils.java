@@ -5,6 +5,8 @@ import com.example.bookingapp.dto.user.UserRegistrationRequestDto;
 import com.example.bookingapp.model.Role;
 import com.example.bookingapp.model.User;
 
+import static com.example.bookingapp.model.Role.RoleName.MANAGER;
+
 public class UserUtils implements CommonTestConstants {
     public static final String BASE_URL = "/users";
     public static final String ME_ENDPOINT = "/me";
@@ -22,8 +24,7 @@ public class UserUtils implements CommonTestConstants {
     public static final String NEW_USER_PASSWORD = "password123";
     public static final String NEW_USER_FIRST_NAME = "Alice";
     public static final String NEW_USER_LAST_NAME = "Brown";
-    public static final String MANAGER_ROLE_NAME = "MANAGER";
-    public static final String INVALID_ROLE_NAME = "INVALID";
+    public static final Role.RoleName MANAGER_ROLE_NAME = MANAGER;
 
     public static UserRegistrationRequestDto createUserRegistrationRequestDto() {
         return createUserRegistrationRequestDto(DEFAULT_EMAIL, DEFAULT_FIRST_NAME, DEFAULT_LAST_NAME);
@@ -40,10 +41,10 @@ public class UserUtils implements CommonTestConstants {
     }
 
     public static RoleUpdateDto createRoleUpdateDto() {
-        return createRoleUpdateDto(MANAGER_ROLE);
+        return createRoleUpdateDto(MANAGER_ROLE_NAME);
     }
 
-    public static RoleUpdateDto createRoleUpdateDto(String roleName) {
+    public static RoleUpdateDto createRoleUpdateDto(Role.RoleName roleName) {
         RoleUpdateDto dto = new RoleUpdateDto();
         dto.setRoleName(roleName);
         return dto;

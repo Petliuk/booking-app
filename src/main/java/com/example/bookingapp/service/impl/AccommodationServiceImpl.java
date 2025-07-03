@@ -3,6 +3,7 @@ package com.example.bookingapp.service.impl;
 import com.example.bookingapp.dto.accommodation.AccommodationDto;
 import com.example.bookingapp.dto.accommodation.AccommodationSearchParametersDto;
 import com.example.bookingapp.dto.accommodation.CreateAccommodationRequestDto;
+import com.example.bookingapp.dto.accommodation.UpdateAccommodationRequestDto;
 import com.example.bookingapp.exception.EntityNotFoundException;
 import com.example.bookingapp.exception.InvalidRequestException;
 import com.example.bookingapp.mapper.AccommodationMapper;
@@ -13,7 +14,6 @@ import com.example.bookingapp.repository.accommodation.AccommodationSpecificatio
 import com.example.bookingapp.repository.booking.BookingRepository;
 import com.example.bookingapp.service.AccommodationService;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,7 +31,7 @@ public class AccommodationServiceImpl implements AccommodationService {
 
     @Override
     @Transactional
-    public AccommodationDto create(@Valid CreateAccommodationRequestDto dto) {
+    public AccommodationDto create(CreateAccommodationRequestDto dto) {
         validateAccommodationDto(dto);
         Accommodation accommodation = accommodationMapper.toEntity(dto);
         return accommodationMapper.toDto(accommodationRepository.save(accommodation));
@@ -45,7 +45,6 @@ public class AccommodationServiceImpl implements AccommodationService {
 
     @Override
     public AccommodationDto findById(Long id) {
-        validateId(id);
         Accommodation accommodation = accommodationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Accommodation with: "
                         + id + "not found"));
@@ -54,25 +53,19 @@ public class AccommodationServiceImpl implements AccommodationService {
 
     @Override
     @Transactional
-    public AccommodationDto update(Long id, @Valid AccommodationDto dto) {
-        validateId(id);
+    public AccommodationDto update(Long id, UpdateAccommodationRequestDto dto) {
         validateAccommodationDto(dto);
-        Accommodation accommodation = accommodationRepository.findById(id)
+        Accommodation existingAccommodation = accommodationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Accommodation with: " + id + "not found"));
-        accommodation.setPropertyType(dto.getPropertyType());
-        accommodation.setLocation(accommodationMapper.toEntity(dto.getLocation()));
-        accommodation.setSize(dto.getSize());
-        accommodation.setAmenities(dto.getAmenities());
-        accommodation.setPricePerDay(dto.getPricePerDay());
-        accommodation.setAvailability(dto.getAvailability());
-        return accommodationMapper.toDto(accommodationRepository.save(accommodation));
+        Accommodation updatedAccommodation = accommodationMapper.toEntity(dto);
+        updatedAccommodation.setId(existingAccommodation.getId());
+        return accommodationMapper.toDto(accommodationRepository.save(updatedAccommodation));
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
-        validateId(id);
         accommodationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Housing with ID " + id + "not found"));
@@ -98,12 +91,6 @@ public class AccommodationServiceImpl implements AccommodationService {
     private void validateAccommodationDto(Object dto) {
         if (dto == null) {
             throw new InvalidRequestException("DTO of housing cannot be null");
-        }
-    }
-
-    private void validateId(Long id) {
-        if (id == null || id <= 0) {
-            throw new InvalidRequestException("ID must be a positive number");
         }
     }
 }

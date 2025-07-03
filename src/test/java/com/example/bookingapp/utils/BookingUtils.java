@@ -22,13 +22,12 @@ public class BookingUtils implements CommonTestConstants {
     public static final String CLEAR_BOOKING_TEST_DATA_SQL = "classpath:database/booking/clear-booking-test-data.sql";
     public static final String ADD_ACCOMMODATION_TEST_DATA_SQL = "classpath:database/accommodation/add-accommodation-test-data.sql";
     public static final String CLEAR_ACCOMMODATION_TEST_DATA_SQL = "classpath:database/accommodation/clear-accommodation-test-data.sql";
-    public static final int STATUS_NO_CONTENT = 204;
     public static final String CUSTOMER_EMAIL = "user@example.com";
     public static final Booking.BookingStatus PENDING_STATUS = Booking.BookingStatus.PENDING;
     public static final Booking.BookingStatus CANCELED_STATUS = Booking.BookingStatus.CANCELED;
     public static final String PENDING_STATUS_STRING = "PENDING";
-    public static final LocalDate TEST_CHECK_IN_DATE = LocalDate.of(2025, 7, 1);
-    public static final LocalDate TEST_CHECK_OUT_DATE = LocalDate.of(2025, 7, 5);
+    public static final LocalDate TEST_CHECK_IN_DATE = LocalDate.now().plusDays(1);
+    public static final LocalDate TEST_CHECK_OUT_DATE = LocalDate.now().plusDays(5);
     public static final String MANAGER_EMAIL = "manager@example.com";
     public static final Accommodation.PropertyType HOUSE_PROPERTY_TYPE = Accommodation.PropertyType.HOUSE;
     public static final String TEST_CITY = "Lviv";

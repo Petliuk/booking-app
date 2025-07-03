@@ -15,5 +15,5 @@ VALUES (1, 'WiFi'), (1, 'Parking')
     ON DUPLICATE KEY UPDATE accommodation_id=accommodation_id;
 
 INSERT INTO bookings (id, check_in_date, check_out_date, accommodation_id, user_id, status)
-VALUES (1, '2025-07-01', '2025-07-05', 1, 1, 'PENDING')
-    ON DUPLICATE KEY UPDATE id=id;
+VALUES (1, DATE_ADD(CURDATE(), INTERVAL 1 DAY), DATE_ADD(CURDATE(), INTERVAL 5 DAY), 1, 1, 'PENDING')
+ON DUPLICATE KEY UPDATE id=id;

@@ -1,6 +1,7 @@
 package com.example.bookingapp.service;
 
 import com.example.bookingapp.dto.booking.BookingResponseDto;
+import com.example.bookingapp.dto.booking.BookingSearchParametersDto;
 import com.example.bookingapp.dto.booking.CreateBookingDto;
 import com.example.bookingapp.exception.InvalidRequestException;
 import com.example.bookingapp.utils.CommonTestConstants;
@@ -90,10 +91,11 @@ public class BookingServiceTest {
     @DisplayName("Find all bookings with status filter should return filtered list")
     void findAll_WithStatusFilter_ReturnsFilteredList() {
         // Given
-        String status = PENDING_STATUS_STRING;
+        BookingSearchParametersDto params = new BookingSearchParametersDto();
+        params.setStatus(PENDING_STATUS_STRING);
 
         // When
-        List<BookingResponseDto> result = bookingService.findAll(null, status);
+        List<BookingResponseDto> result = bookingService.findAll(params);
 
         // Then
         assertThat(result).hasSize(1);

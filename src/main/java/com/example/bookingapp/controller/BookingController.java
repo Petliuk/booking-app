@@ -1,6 +1,7 @@
 package com.example.bookingapp.controller;
 
 import com.example.bookingapp.dto.booking.BookingResponseDto;
+import com.example.bookingapp.dto.booking.BookingSearchParametersDto;
 import com.example.bookingapp.dto.booking.CreateBookingDto;
 import com.example.bookingapp.service.BookingService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,10 +48,8 @@ public class BookingController {
     @PreAuthorize("hasAuthority('MANAGER')")
     @Operation(summary = "Get bookings with filters",
             description = "Returns a list of bookings by user ID and/or status (for managers only)")
-    public List<BookingResponseDto> list(
-            @RequestParam(required = false) Long userId,
-            @RequestParam(required = false) String status) {
-        return bookingService.findAll(userId, status);
+    public List<BookingResponseDto> list(@RequestBody @Valid BookingSearchParametersDto params) {
+        return bookingService.findAll(params);
     }
 
     @GetMapping("/{id}")

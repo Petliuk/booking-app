@@ -1,10 +1,9 @@
 package com.example.bookingapp.dto.user;
 
-import jakarta.validation.constraints.NotBlank;
+import com.example.bookingapp.model.Role;
 import lombok.Data;
 
 @Data
 public class RoleUpdateDto {
-    @NotBlank(message = "Role name must not be blank")
-    private String roleName;
+    private Role.RoleName roleName;
 }

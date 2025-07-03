@@ -1,7 +1,9 @@
 package com.example.bookingapp.service.impl;
 
+import com.example.bookingapp.dto.user.ChangePasswordDto;
 import com.example.bookingapp.dto.user.UserRegistrationRequestDto;
 import com.example.bookingapp.dto.user.UserResponseDto;
+import com.example.bookingapp.dto.user.UserUpdateRequestDto;
 import com.example.bookingapp.exception.EntityNotFoundException;
 import com.example.bookingapp.exception.InvalidRequestException;
 import com.example.bookingapp.exception.RegistrationException;
@@ -53,34 +55,39 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto updateCurrentUser(UserRegistrationRequestDto requestDto) {
+    public UserResponseDto updateCurrentUser(UserUpdateRequestDto requestDto) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
-        user.setFirstName(requestDto.getFirstName());
-        user.setLastName(requestDto.getLastName());
-        if (requestDto.getPassword() != null && !requestDto.getPassword().isEmpty()) {
-            user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
-        }
+        User updatedUser = userMapper.toEntity(requestDto);
+        user.setFirstName(updatedUser.getFirstName());
+        user.setLastName(updatedUser.getLastName());
+        user.setEmail(updatedUser.getEmail());
         userRepository.save(user);
         return userMapper.toDto(user);
     }
 
     @Override
-    public UserResponseDto updateRole(Long id, String roleName) {
+    public UserResponseDto updateRole(Long id, Role.RoleName roleName) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
-        Role.RoleName roleNameEnum;
-        try {
-            roleNameEnum = Role.RoleName.valueOf(roleName.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new InvalidRequestException("Invalid role name: "
-                    + roleName + ". Must be one of: CUSTOMER, MANAGER");
-        }
-        Role role = roleRepository.findByName(roleNameEnum)
-                .orElseThrow(() -> new EntityNotFoundException("Role not found: " + roleNameEnum));
+        Role role = roleRepository.findByName(roleName)
+                .orElseThrow(() -> new EntityNotFoundException("Role not found: " + roleName));
         user.getRoles().clear();
         user.getRoles().add(role);
+        userRepository.save(user);
+        return userMapper.toDto(user);
+    }
+
+    @Override
+    public UserResponseDto changePassword(ChangePasswordDto requestDto) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        if (!passwordEncoder.matches(requestDto.getOldPassword(), user.getPassword())) {
+            throw new InvalidRequestException("Old password is incorrect");
+        }
+        user.setPassword(passwordEncoder.encode(requestDto.getNewPassword()));
         userRepository.save(user);
         return userMapper.toDto(user);
     }

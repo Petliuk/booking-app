@@ -3,6 +3,7 @@ package com.example.bookingapp.controller;
 import com.example.bookingapp.dto.accommodation.AccommodationDto;
 import com.example.bookingapp.dto.accommodation.AccommodationSearchParametersDto;
 import com.example.bookingapp.dto.accommodation.CreateAccommodationRequestDto;
+import com.example.bookingapp.dto.accommodation.UpdateAccommodationRequestDto;
 import com.example.bookingapp.service.AccommodationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -58,7 +59,7 @@ public class AccommodationController {
     @Operation(summary = "Renovate your home",
             description = "Updates property details (for managers only)")
     public AccommodationDto update(@PathVariable Long id,
-                                   @RequestBody @Valid AccommodationDto dto) {
+                                   @RequestBody @Valid UpdateAccommodationRequestDto dto) {
         return accommodationService.update(id, dto);
     }
 

@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class AccommodationSpecificationBuilder implements SpecificationBuilder<Accommodation> {
+public class AccommodationSpecificationBuilder implements SpecificationBuilder<Accommodation,
+        AccommodationSearchParametersDto> {
 
     private final SpecificationProviderManager<Accommodation> specificationProviderManager;
 

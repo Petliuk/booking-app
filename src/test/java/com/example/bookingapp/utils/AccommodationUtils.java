@@ -2,7 +2,6 @@ package com.example.bookingapp.utils;
 
 import com.example.bookingapp.dto.accommodation.AccommodationDto;
 import com.example.bookingapp.dto.accommodation.AddressDto;
-import com.example.bookingapp.dto.accommodation.AccommodationSearchParametersDto;
 import com.example.bookingapp.dto.accommodation.CreateAccommodationRequestDto;
 import com.example.bookingapp.model.Accommodation;
 import com.example.bookingapp.model.Address;
