@@ -1,11 +1,9 @@
 package com.example.bookingapp.controller;
 
 import com.example.bookingapp.dto.accommodation.AccommodationDto;
-import com.example.bookingapp.dto.accommodation.AccommodationSearchParametersDto;
 import com.example.bookingapp.dto.accommodation.CreateAccommodationRequestDto;
 import com.example.bookingapp.model.Accommodation;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.example.bookingapp.utils.CommonTestConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +19,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import java.math.BigDecimal;
-import java.util.List;
 import static com.example.bookingapp.model.Accommodation.PropertyType.HOUSE;
 import static com.example.bookingapp.utils.AccommodationUtils.*;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
@@ -51,7 +48,7 @@ public class AccommodationControllerTest {
     }
 
     @Test
-    @WithMockUser(username = MANAGER_USERNAME, authorities = MANAGER_ROLE)
+    @WithMockUser(username = CommonTestConstants.ID, authorities = MANAGER_ROLE)
     @DisplayName("Create accommodation with valid request")
     @Sql(scripts = CLEAR_ACCOMMODATION_TEST_DATA_SQL, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void create_ValidRequest_Success() throws Exception {
@@ -63,7 +60,7 @@ public class AccommodationControllerTest {
         MvcResult result = mockMvc.perform(post(BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn();
 
         // Then

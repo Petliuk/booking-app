@@ -72,9 +72,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public List<PaymentDto> findAll(Long userId) {
-        String email = getCurrentUserEmail();
-        boolean isManager = isUserManager(email);
-        if (!isManager && userId != null) {
+        Long currentUserId = getCurrentUserId();
+        boolean isManager = isUserManager(currentUserId);
+        if (!isManager && userId != null && !userId.equals(currentUserId)) {
             throw new InvalidRequestException("Only managers can view payments of other users");
         }
         return userId != null ? findByUserId(userId) : getAllPayments();
@@ -150,8 +150,8 @@ public class PaymentServiceImpl implements PaymentService {
         if (booking.getStatus() != Booking.BookingStatus.PENDING) {
             throw new InvalidRequestException("Booking must be in PENDING status for payment");
         }
-        String currentUserEmail = getCurrentUserEmail();
-        if (!booking.getUser().getEmail().equals(currentUserEmail)) {
+        Long currentUserId = getCurrentUserId();
+        if (!booking.getUser().getId().equals(currentUserId)) {
             throw new InvalidRequestException("You can only pay for your own bookings");
         }
     }
@@ -181,19 +181,11 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private Long getCurrentUserId() {
-        String email = getCurrentUserEmail();
-        return userRepository.findByEmail(email)
-                .map(com.example.bookingapp.model.User::getId)
-                .orElseThrow(() -> new EntityNotFoundException("User with email "
-                        + email + " not found"));
+        return Long.valueOf(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
-    private String getCurrentUserEmail() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
-    }
-
-    private boolean isUserManager(String email) {
-        return userRepository.findByEmail(email)
+    private boolean isUserManager(Long userId) {
+        return userRepository.findById(userId)
                 .map(user -> user.getRoles().stream()
                         .anyMatch(role -> role.getName() == Role.RoleName.MANAGER))
                 .orElse(false);

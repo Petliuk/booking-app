@@ -36,6 +36,7 @@ public class AccommodationController {
     @PreAuthorize("hasAuthority('MANAGER')")
     @Operation(summary = "Create housing",
             description = "Creates new housing (for managers only)")
+    @ResponseStatus(HttpStatus.CREATED)
     public AccommodationDto create(@RequestBody @Valid CreateAccommodationRequestDto dto) {
         return accommodationService.create(dto);
     }

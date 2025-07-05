@@ -8,6 +8,7 @@ import com.example.bookingapp.dto.accommodation.UpdateAccommodationRequestDto;
 import com.example.bookingapp.model.Accommodation;
 import com.example.bookingapp.model.Address;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 
 @Mapper(config = MapperConfig.class)
 public interface AccommodationMapper {
@@ -19,4 +20,6 @@ public interface AccommodationMapper {
 
     AccommodationDto toDto(Accommodation accommodation);
 
+    void updateFromDto(UpdateAccommodationRequestDto dto,
+                       @MappingTarget Accommodation accommodation);
 }

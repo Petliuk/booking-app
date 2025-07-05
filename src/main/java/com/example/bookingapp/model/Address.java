@@ -14,18 +14,18 @@ import lombok.NoArgsConstructor;
 public class Address {
 
     @NotBlank(message = "Street is required")
-    @Column(name = "street", nullable = false)
+    @Column(nullable = false)
     private String street;
 
     @NotBlank(message = "City is required")
-    @Column(name = "city", nullable = false)
+    @Column(nullable = false)
     private String city;
 
     @NotBlank(message = "Country is required")
-    @Column(name = "country", nullable = false)
+    @Column(nullable = false)
     private String country;
 
     @NotBlank(message = "Postal code is required")
-    @Column(name = "postal_code", nullable = false)
+    @Column(nullable = false)
     private String postalCode;
 }

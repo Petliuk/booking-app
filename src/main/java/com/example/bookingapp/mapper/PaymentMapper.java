@@ -14,7 +14,6 @@ public interface PaymentMapper {
 
     Payment toEntity(CreatePaymentDto dto);
 
-    @Mapping(source = "booking", target = "booking")
     @Mapping(source = "sessionUrl", target = "sessionUrl")
     @Mapping(source = "sessionId", target = "sessionId")
     @Mapping(source = "amountToPay", target = "amountToPay")

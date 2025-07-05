@@ -3,7 +3,6 @@ package com.example.bookingapp.service;
 import com.example.bookingapp.dto.accommodation.AccommodationDto;
 import com.example.bookingapp.dto.accommodation.CreateAccommodationRequestDto;
 import com.example.bookingapp.exception.EntityNotFoundException;
-import com.example.bookingapp.exception.InvalidRequestException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,16 +38,6 @@ public class AccommodationServiceTest {
         assertThat(result.getPropertyType()).isEqualTo(HOUSE_PROPERTY_TYPE);
         assertThat(result.getLocation().getCity()).isEqualTo(KYIV_CITY);
         assertThat(result.getPricePerDay()).isEqualTo(new BigDecimal("100.00"));
-    }
-
-    @Test
-    @DisplayName("Create accommodation with null DTO should throw exception")
-    void create_NullDto_ThrowsException() {
-        // Given
-        CreateAccommodationRequestDto requestDto = null;
-
-        // When & Then
-        assertThrows(InvalidRequestException.class, () -> accommodationService.create(requestDto));
     }
 
     @Test

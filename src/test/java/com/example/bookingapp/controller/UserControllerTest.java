@@ -3,6 +3,7 @@ package com.example.bookingapp.controller;
 import com.example.bookingapp.dto.user.RoleUpdateDto;
 import com.example.bookingapp.dto.user.UserRegistrationRequestDto;
 import com.example.bookingapp.dto.user.UserResponseDto;
+import com.example.bookingapp.utils.CommonTestConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -47,7 +48,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = CUSTOMER_EMAIL, roles = CUSTOMER_ROLE)
+    @WithMockUser(username = CommonTestConstants.ID, roles = CUSTOMER_ROLE)
     @DisplayName("Get current user's profile")
     void getProfile_AuthenticatedUser_Success() throws Exception {
         // Given
@@ -67,7 +68,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = CUSTOMER_EMAIL, roles = CUSTOMER_ROLE)
+    @WithMockUser(username = CommonTestConstants.ID, roles = CUSTOMER_ROLE)
     @DisplayName("Update current user's profile")
     void updateProfile_ValidRequest_Success() throws Exception {
         // Given

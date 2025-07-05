@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class BookingUtils implements CommonTestConstants {
-
     public static final String BASE_URL = "/bookings";
     public static final String MY_BOOKINGS_ENDPOINT = "/my";
     public static final Long VALID_BOOKING_ID = 1L;
@@ -22,7 +21,6 @@ public class BookingUtils implements CommonTestConstants {
     public static final String CLEAR_BOOKING_TEST_DATA_SQL = "classpath:database/booking/clear-booking-test-data.sql";
     public static final String ADD_ACCOMMODATION_TEST_DATA_SQL = "classpath:database/accommodation/add-accommodation-test-data.sql";
     public static final String CLEAR_ACCOMMODATION_TEST_DATA_SQL = "classpath:database/accommodation/clear-accommodation-test-data.sql";
-    public static final String CUSTOMER_EMAIL = "user@example.com";
     public static final Booking.BookingStatus PENDING_STATUS = Booking.BookingStatus.PENDING;
     public static final Booking.BookingStatus CANCELED_STATUS = Booking.BookingStatus.CANCELED;
     public static final String PENDING_STATUS_STRING = "PENDING";

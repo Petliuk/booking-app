@@ -2,10 +2,10 @@ package com.example.bookingapp.security;
 
 import com.example.bookingapp.dto.user.UserLoginRequestDto;
 import com.example.bookingapp.dto.user.UserLoginResponseDto;
+import com.example.bookingapp.model.User;
+import com.example.bookingapp.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,13 +13,14 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
 
     private final JwtUtil jwtUtil;
-    private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
 
     public UserLoginResponseDto authenticate(UserLoginRequestDto request) {
-        final Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
-        String token = jwtUtil.generateToken(authentication.getName());
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        "User with email: " + request.getEmail() + " not found"));
+
+        String token = jwtUtil.generateToken(user.getId());
         return new UserLoginResponseDto(token);
     }
 }

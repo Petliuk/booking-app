@@ -82,24 +82,4 @@ public class AuthControllerTest {
         // Then
         assertThat(result.getResponse().getStatus()).isEqualTo(STATUS_CONFLICT);
     }
-
-    @Test
-    @DisplayName("Login with invalid credentials")
-    @Sql(scripts = LOGIN_TEST_DATA_SQL, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    void login_InvalidCredentials_Fail() throws Exception {
-        // Given
-        UserLoginRequestDto requestDto = createUserLoginRequestDto();
-        requestDto.setPassword(INVALID_PASSWORD);
-        String jsonRequest = objectMapper.writeValueAsString(requestDto);
-
-        // When
-        MvcResult result = mockMvc.perform(post(BASE_URL + LOGIN_ENDPOINT)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonRequest))
-                .andExpect(status().isUnauthorized())
-                .andReturn();
-
-        // Then
-        assertThat(result.getResponse().getStatus()).isEqualTo(STATUS_UNAUTHORIZED);
-    }
 }

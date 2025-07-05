@@ -41,7 +41,7 @@ public class PaymentController {
     @Operation(summary = "List payments",
             description = "Returns a list of payments,"
                     + " optionally filtered by user ID (for managers)")
-    public List<PaymentDto> list(@RequestParam(required = false) Long userId) {
+    public List<PaymentDto> getPayments(@RequestParam(required = false) Long userId) {
         return paymentService.findAll(userId);
     }
 

@@ -42,53 +42,62 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Default role " + Role.RoleName.CUSTOMER + "not found"));
         user.setRoles(Set.of(userRole));
-        userRepository.save(user);
-        return userMapper.toDto(user);
+        return userMapper.toDto(userRepository.save(user));
     }
 
     @Override
     public UserResponseDto getCurrentUser() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
-        return userMapper.toDto(user);
+        Long userId = Long.parseLong(SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName());
+        return userMapper.toDto(userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User with ID: "
+                        + userId + " not found")));
     }
 
     @Override
     public UserResponseDto updateCurrentUser(UserUpdateRequestDto requestDto) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        Long userId = Long.parseLong(SecurityContextHolder.getContext()
+                .getAuthentication().getName());
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User with ID: "
+                        + userId + " not found"));
+        if (!user.getEmail().equals(requestDto.getEmail())
+                && userRepository.existsByEmail(requestDto.getEmail())) {
+            throw new InvalidRequestException("Email "
+                    + requestDto.getEmail() + " is already taken");
+        }
         User updatedUser = userMapper.toEntity(requestDto);
         user.setFirstName(updatedUser.getFirstName());
         user.setLastName(updatedUser.getLastName());
         user.setEmail(updatedUser.getEmail());
-        userRepository.save(user);
-        return userMapper.toDto(user);
+        return userMapper.toDto(userRepository.save(user));
     }
 
     @Override
     public UserResponseDto updateRole(Long id, Role.RoleName roleName) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: "
+                        + id));
         Role role = roleRepository.findByName(roleName)
                 .orElseThrow(() -> new EntityNotFoundException("Role not found: " + roleName));
         user.getRoles().clear();
         user.getRoles().add(role);
-        userRepository.save(user);
-        return userMapper.toDto(user);
+        return userMapper.toDto(userRepository.save(user));
     }
 
     @Override
     public UserResponseDto changePassword(ChangePasswordDto requestDto) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        Long userId = Long.parseLong(SecurityContextHolder.getContext()
+                .getAuthentication().getName());
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User with ID: "
+                        + userId + " not found"));
         if (!passwordEncoder.matches(requestDto.getOldPassword(), user.getPassword())) {
             throw new InvalidRequestException("Old password is incorrect");
         }
         user.setPassword(passwordEncoder.encode(requestDto.getNewPassword()));
-        userRepository.save(user);
-        return userMapper.toDto(user);
+        return userMapper.toDto(userRepository.save(user));
     }
 }

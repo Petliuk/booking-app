@@ -5,6 +5,7 @@ import com.example.bookingapp.dto.booking.BookingSearchParametersDto;
 import com.example.bookingapp.dto.booking.CreateBookingDto;
 import com.example.bookingapp.exception.InvalidRequestException;
 import com.example.bookingapp.utils.CommonTestConstants;
+import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -42,7 +43,7 @@ public class BookingServiceTest {
     @BeforeEach
     void setUp() {
         Authentication authentication = mock(Authentication.class);
-        when(authentication.getName()).thenReturn(CommonTestConstants.DEFAULT_EMAIL);
+        when(authentication.getName()).thenReturn(CommonTestConstants.ID);
         SecurityContext securityContext = mock(SecurityContext.class);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
@@ -104,6 +105,7 @@ public class BookingServiceTest {
 
     @Test
     @DisplayName("Cancel booking as owner should succeed")
+    @Transactional
     void cancel_ValidBooking_Succeeds() {
         // Given
         Long bookingId = VALID_BOOKING_ID;

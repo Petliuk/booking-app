@@ -30,12 +30,12 @@ public class Booking {
 
     @FutureOrPresent(message = "Check-in date must be today or in the future")
     @NotNull(message = "Arrival date is required")
-    @Column(name = "check_in_date", nullable = false)
+    @Column(nullable = false)
     private LocalDate checkInDate;
 
     @Future(message = "The departure date must be in the future.")
     @NotNull(message = "Departure date is required.")
-    @Column(name = "check_out_date", nullable = false)
+    @Column(nullable = false)
     private LocalDate checkOutDate;
 
     @NotNull(message = "Housing is mandatory")

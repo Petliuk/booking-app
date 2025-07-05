@@ -32,7 +32,6 @@ public class AccommodationServiceImpl implements AccommodationService {
     @Override
     @Transactional
     public AccommodationDto create(CreateAccommodationRequestDto dto) {
-        validateAccommodationDto(dto);
         Accommodation accommodation = accommodationMapper.toEntity(dto);
         return accommodationMapper.toDto(accommodationRepository.save(accommodation));
     }
@@ -54,13 +53,11 @@ public class AccommodationServiceImpl implements AccommodationService {
     @Override
     @Transactional
     public AccommodationDto update(Long id, UpdateAccommodationRequestDto dto) {
-        validateAccommodationDto(dto);
         Accommodation existingAccommodation = accommodationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Accommodation with: " + id + "not found"));
-        Accommodation updatedAccommodation = accommodationMapper.toEntity(dto);
-        updatedAccommodation.setId(existingAccommodation.getId());
-        return accommodationMapper.toDto(accommodationRepository.save(updatedAccommodation));
+        accommodationMapper.updateFromDto(dto, existingAccommodation);
+        return accommodationMapper.toDto(accommodationRepository.save(existingAccommodation));
     }
 
     @Override
@@ -86,11 +83,5 @@ public class AccommodationServiceImpl implements AccommodationService {
                 .stream()
                 .map(accommodationMapper::toDto)
                 .toList();
-    }
-
-    private void validateAccommodationDto(Object dto) {
-        if (dto == null) {
-            throw new InvalidRequestException("DTO of housing cannot be null");
-        }
     }
 }

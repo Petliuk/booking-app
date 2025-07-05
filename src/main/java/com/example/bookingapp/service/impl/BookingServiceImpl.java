@@ -3,13 +3,11 @@ package com.example.bookingapp.service.impl;
 import com.example.bookingapp.dto.booking.BookingResponseDto;
 import com.example.bookingapp.dto.booking.BookingSearchParametersDto;
 import com.example.bookingapp.dto.booking.CreateBookingDto;
-import com.example.bookingapp.exception.AccessDeniedException;
 import com.example.bookingapp.exception.EntityNotFoundException;
 import com.example.bookingapp.exception.InvalidRequestException;
 import com.example.bookingapp.mapper.BookingMapper;
 import com.example.bookingapp.model.Accommodation;
 import com.example.bookingapp.model.Booking;
-import com.example.bookingapp.model.Role;
 import com.example.bookingapp.model.User;
 import com.example.bookingapp.repository.accommodation.AccommodationRepository;
 import com.example.bookingapp.repository.booking.BookingRepository;
@@ -25,6 +23,7 @@ import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -54,10 +53,11 @@ public class BookingServiceImpl implements BookingService {
         booking.setUser(user);
         booking.setStatus(Booking.BookingStatus.PENDING);
         updateAccommodationAvailability(accommodation, Constants.DECREMENT_AVAILABILITY);
-        Booking savedBooking = bookingRepository.save(booking);
-        notificationService.sendNotification(String.format("New booking #%d created for %s",
-                savedBooking.getId(), accommodation.getLocation().getCity()));
-        return bookingMapper.toDto(savedBooking);
+        bookingRepository.save(booking);
+        notificationService.sendNotification(String.format("New booking"
+                        + " #%d created for %s",
+                booking.getId(), accommodation.getLocation().getCity()));
+        return bookingMapper.toDto(booking);
     }
 
     @Override
@@ -75,19 +75,14 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingResponseDto findById(Long id) {
-        validateId(id);
         Booking booking = getBookingById(id);
-        validateUserAccess(booking);
         return bookingMapper.toDto(booking);
     }
 
     @Override
     @Transactional
     public BookingResponseDto update(Long id, BookingResponseDto dto) {
-        validateId(id);
         Booking booking = getBookingById(id);
-        validateUserAccess(booking);
-
         long activeBookings = countActiveBookings(dto.getAccommodationId(),
                 dto.getCheckInDate(),
                 dto.getCheckOutDate());
@@ -111,9 +106,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public void cancel(Long id) {
-        validateId(id);
         Booking booking = getBookingById(id);
-        validateUserAccess(booking);
         if (booking.getStatus() == Booking.BookingStatus.CANCELED) {
             throw new InvalidRequestException("Booking with ID "
                     + id + " is already canceled");
@@ -133,7 +126,6 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public void setExpired(Long id) {
-        validateId(id);
         Booking booking = getBookingById(id);
         if (booking.getStatus() == Booking.BookingStatus.EXPIRED) {
             throw new InvalidRequestException("Booking with ID "
@@ -143,12 +135,11 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private User getCurrentUser() {
-        String email = SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getName();
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("User with email "
-                        + email + " not found"));
+        Authentication authentication = SecurityContextHolder.getContext()
+                .getAuthentication();
+        Long userId = Long.parseLong(authentication.getName());
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
     private Booking getBookingById(Long id) {
@@ -161,21 +152,6 @@ public class BookingServiceImpl implements BookingService {
         return accommodationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Accommodation with ID "
                         + id + " not found"));
-    }
-
-    private void validateId(Long id) {
-        if (id == null || id <= Constants.NO_ACTIVE_BOOKINGS) {
-            throw new InvalidRequestException("ID must be a positive number");
-        }
-    }
-
-    private void validateUserAccess(Booking booking) {
-        User user = getCurrentUser();
-        boolean isManager = user.getRoles().stream()
-                .anyMatch(r -> r.getName() == Role.RoleName.MANAGER);
-        if (!isManager && !booking.getUser().getId().equals(user.getId())) {
-            throw new AccessDeniedException("Access to this booking is denied");
-        }
     }
 
     private void validateAccommodationAvailability(Accommodation accommodation,

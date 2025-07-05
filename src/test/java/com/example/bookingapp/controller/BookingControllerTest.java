@@ -2,8 +2,10 @@ package com.example.bookingapp.controller;
 
 import com.example.bookingapp.dto.booking.BookingResponseDto;
 import com.example.bookingapp.model.Booking;
+import com.example.bookingapp.utils.CommonTestConstants;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,7 +50,7 @@ public class BookingControllerTest {
     }
 
     @Test
-    @WithMockUser(username = CUSTOMER_EMAIL, roles = CUSTOMER_ROLE)
+    @WithMockUser(username = CommonTestConstants.ID, roles = CUSTOMER_ROLE)
     @DisplayName("Get current user's bookings")
     @Sql(scripts = ADD_BOOKING_TEST_DATA_SQL, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = CLEAR_BOOKING_TEST_DATA_SQL, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -73,7 +75,8 @@ public class BookingControllerTest {
     }
 
     @Test
-    @WithMockUser(username = CUSTOMER_EMAIL, roles = CUSTOMER_ROLE)
+    @Transactional
+    @WithMockUser(username = CommonTestConstants.ID, roles = CUSTOMER_ROLE)
     @DisplayName("Get booking by valid ID")
     @Sql(scripts = ADD_BOOKING_TEST_DATA_SQL, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = CLEAR_BOOKING_TEST_DATA_SQL, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -95,7 +98,7 @@ public class BookingControllerTest {
     }
 
     @Test
-    @WithMockUser(username = CUSTOMER_EMAIL, roles = CUSTOMER_ROLE)
+    @WithMockUser(username = CommonTestConstants.ID, roles = CUSTOMER_ROLE)
     @DisplayName("Update booking with valid request")
     @Sql(scripts = ADD_BOOKING_TEST_DATA_SQL, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = CLEAR_BOOKING_TEST_DATA_SQL, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)

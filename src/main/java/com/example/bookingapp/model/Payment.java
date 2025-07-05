@@ -39,7 +39,7 @@ public class Payment {
     @Column(name = "session_id")
     private String sessionId;
 
-    @Column(name = "amount_to_pay", nullable = false)
+    @Column(nullable = false)
     private BigDecimal amountToPay;
 
     public enum PaymentStatus {

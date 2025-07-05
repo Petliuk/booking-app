@@ -32,6 +32,7 @@ public class BookingController {
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Create booking",
             description = "Creates a new booking for the authenticated user")
+    @ResponseStatus(HttpStatus.CREATED)
     public BookingResponseDto create(@RequestBody @Valid CreateBookingDto dto) {
         return bookingService.create(dto);
     }
@@ -48,7 +49,8 @@ public class BookingController {
     @PreAuthorize("hasAuthority('MANAGER')")
     @Operation(summary = "Get bookings with filters",
             description = "Returns a list of bookings by user ID and/or status (for managers only)")
-    public List<BookingResponseDto> list(@RequestBody @Valid BookingSearchParametersDto params) {
+    public List<BookingResponseDto> getBookings(@RequestBody
+                                                    @Valid BookingSearchParametersDto params) {
         return bookingService.findAll(params);
     }
 

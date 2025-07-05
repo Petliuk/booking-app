@@ -34,12 +34,11 @@ public class UserServiceTest {
     @BeforeEach
     void setUp() {
         Authentication authentication = mock(Authentication.class);
-        when(authentication.getName()).thenReturn(CommonTestConstants.DEFAULT_EMAIL);
+        when(authentication.getName()).thenReturn(CommonTestConstants.ID);
         SecurityContext securityContext = mock(SecurityContext.class);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
     }
-
     @Test
     @DisplayName("Register user with valid DTO should return DTO")
     void register_ValidDto_ReturnsDto() {

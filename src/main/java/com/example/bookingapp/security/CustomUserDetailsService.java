@@ -1,7 +1,6 @@
 package com.example.bookingapp.security;
 
 import com.example.bookingapp.repository.user.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,10 +13,14 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email)
-            throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "User with email: " + email + " not found"));
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+        try {
+            Long id = Long.parseLong(userId);
+            return userRepository.findById(id)
+                    .orElseThrow(() -> new UsernameNotFoundException(
+                            "User with id: " + userId + " not found"));
+        } catch (NumberFormatException e) {
+            throw new UsernameNotFoundException("Invalid user id format: " + userId);
+        }
     }
 }

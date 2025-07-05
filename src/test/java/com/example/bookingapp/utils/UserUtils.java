@@ -4,7 +4,6 @@ import com.example.bookingapp.dto.user.RoleUpdateDto;
 import com.example.bookingapp.dto.user.UserRegistrationRequestDto;
 import com.example.bookingapp.model.Role;
 import com.example.bookingapp.model.User;
-
 import static com.example.bookingapp.model.Role.RoleName.MANAGER;
 
 public class UserUtils implements CommonTestConstants {
