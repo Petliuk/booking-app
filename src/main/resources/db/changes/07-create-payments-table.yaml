@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: 07-create-payments-table
+      author: booking-app
+      changes:
+        - createTable:
+            tableName: payments
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: booking_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_payment_booking
+                    references: bookings(id)
+              - column:
+                  name: session_url
+                  type: varchar(2048)
+              - column:
+                  name: session_id
+                  type: varchar(2048)
+              - column:
+                  name: amount_to_pay
+                  type: decimal(10,2)
+                  constraints:
+                    nullable: false

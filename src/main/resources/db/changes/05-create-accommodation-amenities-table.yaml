@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: 05-create-accommodation-amenities-table
+      author: booking-app
+      changes:
+        - createTable:
+            tableName: accommodation_amenities
+            columns:
+              - column:
+                  name: accommodation_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_accommodation_amenities_accommodation
+                    references: accommodations(id)
+              - column:
+                  name: amenities
+                  type: varchar(255)
